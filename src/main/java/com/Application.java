@@ -12,24 +12,28 @@ import java.util.stream.Collectors;
 public class Application {
     private static final List<String> WORDS_LIST = readFile();
     private static final Set<String> WORDS_SET = new HashSet<>(WORDS_LIST);
-    private static List<String> concatenatedWords = new ArrayList<>();
+    private static Set<String> concatenatedWordsSet = new HashSet<>();
     private static String checkingWord;
-    private static boolean flag = false;
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
 
         for (String word : WORDS_LIST) {
             checkingWord = word;
             checkingIfConcatenated(checkingWord);
         }
 
-        concatenatedWords = sortList(concatenatedWords);
+        List<String> concatenatedWordsList = new ArrayList<>(concatenatedWordsSet);
+        concatenatedWordsList = sortList(concatenatedWordsList);
 
-        if (!concatenatedWords.isEmpty() && concatenatedWords.size() > 1) {
-            System.out.println("The longest concatenated word: " + concatenatedWords.get(0));
-            System.out.println("The 2nd longest concatenated word: " + concatenatedWords.get(1));
-            System.out.println("The total count of all the concatenated words: " + concatenatedWords.size());
+        if (!concatenatedWordsList.isEmpty() && concatenatedWordsList.size() > 1) {
+            System.out.println("The longest concatenated word: " + concatenatedWordsList.get(0));
+            System.out.println("The 2nd longest concatenated word: " + concatenatedWordsList.get(1));
+            System.out.println("The total count of all the concatenated words: " + concatenatedWordsList.size());
         }
+
+        long timeSpent = System.currentTimeMillis() - startTime;
+        System.out.println("The program ran " + timeSpent + " milliseconds.");
     }
 
     private static void checkingIfConcatenated(String word) {
@@ -38,14 +42,10 @@ public class Application {
             String right = word.substring(i + 1);
             if (WORDS_SET.contains(left)) {
                 if (WORDS_SET.contains(right)) {
-                    concatenatedWords.add(checkingWord);
-                    flag = true;
+                    concatenatedWordsSet.add(checkingWord);
                     break;
                 }
                 checkingIfConcatenated(right);
-                if (flag) {
-                    break;
-                }
             }
         }
     }
